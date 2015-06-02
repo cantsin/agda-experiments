@@ -1,5 +1,8 @@
 
-module peano where
+module Peano where
+
+  Rel : Set → Set₁
+  Rel X = X → X → Set
 
   data ℕ : Set where
     zero : ℕ
@@ -10,8 +13,8 @@ module peano where
   (suc n) + m = suc (n + m)
 
   data _even : ℕ → Set where
-     ZERO : zero even
-     STEP : ∀ {x} → x even → suc (suc x) even
+    ZERO : zero even
+    STEP : ∀ {x} → x even → suc (suc x) even
 
   proof₁ : suc(suc(suc(suc(zero)))) even
   proof₁ = STEP (STEP ZERO)
