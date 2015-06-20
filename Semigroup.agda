@@ -1,4 +1,4 @@
-open import Peano using (ℕ; zero; suc; _+_; Rel)
+open import Peano using (ℕ; zero; succ; _+_; Rel)
 
 module Semigroup where
 

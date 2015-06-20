@@ -40,12 +40,29 @@ module Boolean where
   infixr 6 _∧_
   infixr 5 _∨_
 
-  data _∨_ { a b } ( A : Set a ) ( B : Set b ) : Set₁ where
+  data ¬_ A : Set where
+    Neg : A → ¬ A
+
+  -- ¬_ : Set → Set
+  -- ¬ A = A → ⊥
+
+  data _∨_ A B : Set where
     Inl : A → A ∨ B
     Inr : B → A ∨ B
 
-  data _∧_ { a b } ( A : Set a ) ( B : Set b ) : Set₁ where
+  data _∧_ A B : Set where
     Conj : A → B → A ∧ B
+
+  ∧-symmetry : ∀ { A B : Set } → A ∧ B → B ∧ A
+  ∧-symmetry (Conj x y) = Conj y x
+
+  ∨-symmetry : ∀ { A B : Set } → A ∨ B → B ∨ A
+  ∨-symmetry (Inl x) = Inr x
+  ∨-symmetry (Inr y) = Inl y
+
+  -- still doesn't seem right.
+  and_neg : { A : Set } → ( A ∧ ¬ A ) → Set
+  and_neg _ = ⊥
 
   and_over : { A B C : Set } → A ∧ ( B ∨ C ) → ( A ∧ B ) ∨ ( A ∧ C )
   and_over (Conj x (Inl y)) = Inl (Conj x y)
@@ -60,7 +77,13 @@ module Boolean where
   or_over (Inr (Conj x y)) = Conj (Inr x) (Inr y)
 
   or_over' : { A B C : Set } → ( A ∨ B ) ∧ ( A ∨ C ) → A ∨ ( B ∧ C )
-  or_over' (Conj (Inl x) (Inl y)) = Inl x
-  or_over' (Conj (Inl x) (Inr y)) = Inl x
-  or_over' (Conj (Inr x) (Inl y)) = Inl y
+  or_over' (Conj (Inl x) _) = Inl x
+  or_over' (Conj _ (Inl y)) = Inl y
   or_over' (Conj (Inr x) (Inr y)) = Inr (Conj x y)
+
+  or_over_negated : { A B : Set } → ( A ∨ ( ¬ A ∧ B ) ) → ( A ∨ B )
+  or_over_negated (Inl x) = Inl x
+  or_over_negated (Inr (Conj _ y)) = Inr y
+
+  demorgan : { A B : Set } → ¬ A ∧ ¬ B → ¬ ( A ∨ B )
+  demorgan (Conj (Neg x) _) = Neg (Inl x)
