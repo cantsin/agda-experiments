@@ -1,12 +1,6 @@
+open import Empty
+
 module Boolean where
-
-  record ⊤ : Set where
-    constructor tt
-
-  data ⊥ : Set where
-
-  {-# IMPORT Data.FFI #-}
-  {-# COMPILED_DATA ⊥ Data.FFI.AgdaEmpty #-}
 
   data Bool : Set where
     true : Bool
@@ -59,10 +53,6 @@ module Boolean where
   ∨-symmetry : ∀ { A B : Set } → A ∨ B → B ∨ A
   ∨-symmetry (Inl x) = Inr x
   ∨-symmetry (Inr y) = Inl y
-
-  -- still doesn't seem right.
-  and_neg : { A : Set } → ( A ∧ ¬ A ) → Set
-  and_neg _ = ⊥
 
   and_over : { A B C : Set } → A ∧ ( B ∨ C ) → ( A ∧ B ) ∨ ( A ∧ C )
   and_over (Conj x (Inl y)) = Inl (Conj x y)
