@@ -77,3 +77,13 @@ module Boolean where
 
   demorgan : { A B : Set } → ¬ A ∧ ¬ B → ¬ ( A ∨ B )
   demorgan (Conj (Neg x) _) = Neg (Inl x)
+
+  proof₁ : { P Q : Set } → (P ∧ Q) → P
+  proof₁ (Conj p q) = p
+
+  proof₂ : { P Q : Set } → (P ∧ Q) → Q
+  proof₂ (Conj p q) = q
+
+  _⇔_ : (P : Set) → (Q : Set) → Set
+  a ⇔ b = (a → b) ∧ (b → a)
+
