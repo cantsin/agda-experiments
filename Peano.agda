@@ -1,3 +1,4 @@
+open import Empty
 module Peano where
 
   Rel : Set → Set₁
@@ -17,6 +18,37 @@ module Peano where
   zero ∘ _ = zero
   (succ n) ∘ m = (n ∘ m) + m
   {-# BUILTIN NATTIMES _∘_ #-}
+
+  data _≡_ (x : ℕ) : ℕ → Set where
+    refl : x ≡ x
+
+  data _≢_ : ℕ → ℕ → Set where
+    z≢s : ∀ {n} → zero ≢ succ n
+    s≢z : ∀ {n} → succ n ≢ zero
+    s≢s : ∀ {m n} → m ≢ n → succ m ≢ succ n
+
+  data Equal? (m n : ℕ) : Set where
+    yes : m ≡ n → Equal? m n
+    no : m ≢ n → Equal? m n
+
+  _≟_ : (m n : ℕ) → Equal? m n
+  _≟_ zero zero = yes refl
+  _≟_ zero (succ _) = no z≢s
+  _≟_ (succ _) zero = no s≢z
+  _≟_ (succ m) (succ n) with m ≟ n
+  _≟_ (succ m) (succ .m) | yes refl = yes refl
+  _≟_ (succ m) (succ n) | no p = no (s≢s p)
+
+  equality-disjoint : (m n : ℕ) → m ≡ n → m ≢ n → ⊥
+  equality-disjoint zero zero refl ()
+  equality-disjoint zero (succ _) () z≢s
+  equality-disjoint (succ _) zero () s≢z
+  equality-disjoint (succ m) (succ .m) refl (s≢s e) = equality-disjoint m m refl e
+
+  private
+    -- to make the last `equality-disjoint` match clearer, verify that s≢s can be nested
+    test-s≢s : (succ (succ (succ zero))) ≢ (succ (succ zero))
+    test-s≢s = s≢s (s≢s s≢z)
 
   pred : ℕ → ℕ
   pred zero = zero

@@ -47,6 +47,9 @@ module Boolean where
   data _∧_ A B : Set where
     Conj : A → B → A ∧ B
 
+  _⇔_ : (P : Set) → (Q : Set) → Set
+  a ⇔ b = (a → b) ∧ (b → a)
+
   ∧-symmetry : ∀ { A B : Set } → A ∧ B → B ∧ A
   ∧-symmetry (Conj x y) = Conj y x
 
