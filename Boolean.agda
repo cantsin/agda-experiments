@@ -34,11 +34,8 @@ module Boolean where
   infixr 6 _∧_
   infixr 5 _∨_
 
-  data ¬_ A : Set where
-    Neg : A → ¬ A
-
-  -- ¬_ : Set → Set
-  -- ¬ A = A → ⊥
+  ¬_ : Set → Set
+  ¬ A = A → ⊥
 
   data _∨_ A B : Set where
     Inl : A → A ∨ B
@@ -78,15 +75,26 @@ module Boolean where
   or_over_negated (Inl x) = Inl x
   or_over_negated (Inr (Conj _ y)) = Inr y
 
-  demorgan : { A B : Set } → ¬ A ∧ ¬ B → ¬ ( A ∨ B )
-  demorgan (Conj (Neg x) _) = Neg (Inl x)
-
   proof₁ : { P Q : Set } → (P ∧ Q) → P
   proof₁ (Conj p q) = p
 
   proof₂ : { P Q : Set } → (P ∧ Q) → Q
   proof₂ (Conj p q) = q
 
-  _⇔_ : (P : Set) → (Q : Set) → Set
-  a ⇔ b = (a → b) ∧ (b → a)
+  deMorgan₁ : { A B : Set } → ¬ A ∧ ¬ B → ¬ (A ∨ B)
+  deMorgan₁ (Conj ¬x ¬y) (Inl x) = ¬x x
+  deMorgan₁ (Conj ¬x ¬y) (Inr y) = ¬y y
+  -- above is clearer if you re-write the type annotation as:
+  --deMorgan₁ : { A B : Set } → (A → ⊥) ∧ (B → ⊥) → (A ∨ B) → ⊥
+
+  deMorgan₂ : { A B : Set } → ¬ (A ∨ B) → ¬ A ∧ ¬ B
+  deMorgan₂ z = Conj (λ x → z (Inl x)) (λ y → z (Inr y))
+
+  deMorgan₃ : { A B : Set } → ¬ A ∨ ¬ B → ¬ (A ∧ B)
+  deMorgan₃ (Inl ¬x) (Conj x _) = ¬x x
+  deMorgan₃ (Inr ¬y) (Conj _ y) = ¬y y
+
+  -- NOT provable.
+  -- deMorgan₄ : { A B : Set } → ¬ (A ∧ B) → ¬ A ∨ ¬ B
+
 
