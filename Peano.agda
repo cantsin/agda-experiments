@@ -10,6 +10,10 @@ module Peano where
     succ : ℕ → ℕ
   {-# BUILTIN NATURAL ℕ #-}
 
+  pred : ℕ → ℕ
+  pred zero = zero
+  pred (succ x) = x
+
   _+_ : ℕ → ℕ → ℕ
   zero + m = m
   (succ n) + m = succ (n + m)
@@ -51,10 +55,24 @@ module Peano where
     test-s≢s : (succ (succ (succ zero))) ≢ (succ (succ zero))
     test-s≢s = s≢s (s≢s s≢z)
 
-  infix 4 _≤_ _<_ _≥_ _>_
+  data Ordering : Rel ℕ where
+    less : ∀ m k → Ordering m (succ (m + k))
+    equal : ∀ m → Ordering m m
+    greater : ∀ m k → Ordering (succ (m + k)) m
+
+  compare : ∀ m n → Ordering m n
+  compare zero zero = equal zero
+  compare (succ m) zero = greater zero m
+  compare zero (succ n) = less zero n
+  compare (succ m) (succ n) with compare m n
+  compare (succ .m) (succ .(succ m + k)) | less m k = less (succ m) k
+  compare (succ .m) (succ .m) | equal m = equal (succ m)
+  compare (succ .(succ m + k)) (succ .m) | greater m k = greater (succ m) k
+
+  infix 4 _≤_ _<_ _≥_ _>_ _≰_ _≮_ _≱_ _≯_
 
   data _≤_ : Rel ℕ where
-    z≤n : ∀ {n}                 → zero  ≤ n
+    z≤n : ∀ {n} → zero ≤ n
     s≤s : ∀ {m n} (m≤n : m ≤ n) → succ m ≤ succ n
 
   _<_ : Rel ℕ
@@ -66,24 +84,17 @@ module Peano where
   _>_ : Rel ℕ
   m > n = n < m
 
-  infix 4 _≤′_ _<′_ _≥′_ _>′_
+  _≰_ : Rel ℕ
+  a ≰ b = ¬ (a ≤ b)
 
-  data _≤′_ (m : ℕ) : ℕ → Set where
-    ≤′-refl :                         m ≤′ m
-    ≤′-step : ∀ {n} (m≤′n : m ≤′ n) → m ≤′ succ n
+  _≮_ : Rel ℕ
+  a ≮ b = ¬ (a < b)
 
-  _<′_ : Rel ℕ
-  m <′ n = succ m ≤′ n
+  _≱_ : Rel ℕ
+  a ≱ b = ¬ (a ≥ b)
 
-  _≥′_ : Rel ℕ
-  m ≥′ n = n ≤′ m
-
-  _>′_ : Rel ℕ
-  m >′ n = n <′ m
-
-  pred : ℕ → ℕ
-  pred zero = zero
-  pred (succ x) = x
+  _≯_ : Rel ℕ
+  a ≯ b = ¬ (a > b)
 
   data _even : ℕ → Set where
     ZERO : zero even
