@@ -1,8 +1,9 @@
+open import Agda.Primitive
 open import Empty
-module Peano where
+open import Logic
+open import Boolean
 
-  Rel : Set → Set₁
-  Rel X = X → X → Set
+module Peano where
 
   data ℕ : Set where
     zero : ℕ
@@ -50,6 +51,36 @@ module Peano where
     test-s≢s : (succ (succ (succ zero))) ≢ (succ (succ zero))
     test-s≢s = s≢s (s≢s s≢z)
 
+  infix 4 _≤_ _<_ _≥_ _>_
+
+  data _≤_ : Rel ℕ where
+    z≤n : ∀ {n}                 → zero  ≤ n
+    s≤s : ∀ {m n} (m≤n : m ≤ n) → succ m ≤ succ n
+
+  _<_ : Rel ℕ
+  m < n = succ m ≤ n
+
+  _≥_ : Rel ℕ
+  m ≥ n = n ≤ m
+
+  _>_ : Rel ℕ
+  m > n = n < m
+
+  infix 4 _≤′_ _<′_ _≥′_ _>′_
+
+  data _≤′_ (m : ℕ) : ℕ → Set where
+    ≤′-refl :                         m ≤′ m
+    ≤′-step : ∀ {n} (m≤′n : m ≤′ n) → m ≤′ succ n
+
+  _<′_ : Rel ℕ
+  m <′ n = succ m ≤′ n
+
+  _≥′_ : Rel ℕ
+  m ≥′ n = n ≤′ m
+
+  _>′_ : Rel ℕ
+  m >′ n = n <′ m
+
   pred : ℕ → ℕ
   pred zero = zero
   pred (succ x) = x
@@ -58,11 +89,12 @@ module Peano where
     ZERO : zero even
     STEP : ∀ {x} → x even → succ (succ x) even
 
-  proof₁ : succ(succ(succ(succ(zero)))) even
-  proof₁ = STEP (STEP ZERO)
+  private
+    proof₁ : succ(succ(succ(succ(zero)))) even
+    proof₁ = STEP (STEP ZERO)
 
-  proof₂ : (A : Set) → A → A
-  proof₂ _ ν = ν
+    proof₂ : (A : Set) → A → A
+    proof₂ _ ν = ν
 
-  proof'₂ : ℕ → ℕ
-  proof'₂ = proof₂ ℕ
+    proof'₂ : ℕ → ℕ
+    proof'₂ = proof₂ ℕ
