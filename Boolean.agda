@@ -75,11 +75,12 @@ module Boolean where
   or_over_negated (Inl x) = Inl x
   or_over_negated (Inr (Conj _ y)) = Inr y
 
-  proof₁ : { P Q : Set } → (P ∧ Q) → P
-  proof₁ (Conj p q) = p
+  private
+    proof₁ : { P Q : Set } → (P ∧ Q) → P
+    proof₁ (Conj p q) = p
 
-  proof₂ : { P Q : Set } → (P ∧ Q) → Q
-  proof₂ (Conj p q) = q
+    proof₂ : { P Q : Set } → (P ∧ Q) → Q
+    proof₂ (Conj p q) = q
 
   deMorgan₁ : { A B : Set } → ¬ A ∧ ¬ B → ¬ (A ∨ B)
   deMorgan₁ (Conj ¬x ¬y) (Inl x) = ¬x x
