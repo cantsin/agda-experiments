@@ -1,3 +1,0 @@
-* TODO implement semigroups
-https://hackage.haskell.org/package/semigroups-0.8/docs/src/Data-Semigroup.html#%3C%3E
-* agda-input-show-translations
