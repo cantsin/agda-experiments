@@ -97,5 +97,3 @@ module Boolean where
 
   -- NOT provable.
   -- deMorgan₄ : { A B : Set } → ¬ (A ∧ B) → ¬ A ∨ ¬ B
-
-

@@ -1,0 +1,1 @@
+This repository holds several experiments with [Agda](http://wiki.portal.chalmers.se/agda/pmwiki.php), a proof assistant; I mostly focus on relatively simple proofs. I do not import any external libraries for pedagogical purposes.
